@@ -2,6 +2,7 @@ port module Main exposing (init, main, toJs)
 
 import Browser
 import Browser.Navigation as Nav
+import Elm.Constants as Constants
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.Update exposing (update)
@@ -27,7 +28,21 @@ main =
 
 init : Int -> ( Model, Cmd Msg )
 init flags =
-    ( { random_number = Nothing
-      }
-    , Cmd.none
-    )
+    update GenerateRandomNumber initModel
+
+
+initModel : Model
+initModel =
+    { random_number = Nothing
+    , list_of_random_numbers = Nothing
+    , board =
+        { n_squares = Constants.n_squares
+        , n_rows = Constants.n_rows
+        , n_columns = Constants.n_columns
+        }
+    , squares = []
+    }
+
+
+
+-- END

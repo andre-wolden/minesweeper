@@ -1,8 +1,8 @@
 {
     "author": "woldena",
-    "name": "elm 0.19 boilerplate",
+    "name": "minesweep",
     "version": "1.0.0",
-    "description": "Elm 0.19 boilerplate",
+    "description": "asdfasdf",
     "main": "index.js",
     "scripts": {
         "test": "elm-test",
