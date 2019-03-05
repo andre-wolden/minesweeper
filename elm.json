@@ -11,7 +11,8 @@
             "elm/html": "1.0.0",
             "elm/http": "2.0.0",
             "elm/json": "1.1.2",
-            "elm/random": "1.0.0"
+            "elm/random": "1.0.0",
+            "elm-community/random-extra": "3.0.0"
         },
         "indirect": {
             "elm/bytes": "1.0.7",

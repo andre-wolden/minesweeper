@@ -1,4 +1,6 @@
-module Elm.Types exposing (Board, GameStatus, Square, SquareContent(..))
+module Elm.Types exposing (Board, GameStatus, Matrix, Square, SquareContent(..))
+
+import Array exposing (..)
 
 
 type alias Board =
@@ -27,3 +29,7 @@ type SquareContent
     = JustAnEmptySquare
     | ANumber Int
     | BOOOMB
+
+
+type alias Matrix =
+    Array (Array Square)

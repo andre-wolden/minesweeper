@@ -1,5 +1,6 @@
 port module Main exposing (init, main, toJs)
 
+import Array exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Elm.Constants as Constants
@@ -28,19 +29,18 @@ main =
 
 init : Int -> ( Model, Cmd Msg )
 init flags =
-    update GenerateRandomNumber initModel
+    update GenerateListOfRandomNumbersForNBombs initModel
 
 
 initModel : Model
 initModel =
-    { random_number = Nothing
-    , list_of_random_numbers = Nothing
-    , board =
+    { board =
         { n_squares = Constants.n_squares
         , n_rows = Constants.n_rows
         , n_columns = Constants.n_columns
         }
-    , squares = []
+    , bombList = Nothing
+    , matrix = Array.empty
     }
 
 
