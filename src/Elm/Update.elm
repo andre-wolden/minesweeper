@@ -6,7 +6,7 @@ import Elm.GenerateMatrixWithBombs exposing (..)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.RandomNumber exposing (..)
-import Elm.Types exposing (AntallNaboMiner(..), Matrix, Square, SquareContent(..))
+import Elm.Types exposing (Matrix, Square, SquareContent(..))
 import Random
 
 
@@ -33,7 +33,7 @@ update message model =
                 matrix_with_neighbour_number =
                     updateMatrixWithBombNeighbouringNumbers matrix_with_bombs
             in
-            ( { model | matrix = matrix_with_bombs }, Cmd.none )
+            ( { model | matrix = matrix_with_neighbour_number, bombList = Just bombList }, Cmd.none )
 
 
 updateMatrixWithBombNeighbouringNumbers : Matrix -> Matrix
@@ -48,21 +48,98 @@ doThisForEachColumn matrix column =
 
 doThisForEachSquareInColumn : Matrix -> Square -> Square
 doThisForEachSquareInColumn matrix current_square =
-    current_square
+    let
+        i =
+            current_square.i
+
+        j =
+            current_square.j
+
+        up_left : Maybe Square
+        up_left =
+            maybeGetASquareAt (i - 1) (j - 1) matrix
+
+        up_up : Maybe Square
+        up_up =
+            maybeGetASquareAt i (j - 1) matrix
+
+        up_right : Maybe Square
+        up_right =
+            maybeGetASquareAt (i + 1) (j - 1) matrix
+
+        left_left : Maybe Square
+        left_left =
+            maybeGetASquareAt (i - 1) j matrix
+
+        right_right : Maybe Square
+        right_right =
+            maybeGetASquareAt (i + 1) j matrix
+
+        down_left : Maybe Square
+        down_left =
+            maybeGetASquareAt (i - 1) (j + 1) matrix
+
+        down_down : Maybe Square
+        down_down =
+            maybeGetASquareAt i (j + 1) matrix
+
+        down_right : Maybe Square
+        down_right =
+            maybeGetASquareAt (i + 1) (j + 1) matrix
+
+        listOfNeighbouringSquares : List (Maybe Square)
+        listOfNeighbouringSquares =
+            [ up_left, up_up, up_right, left_left, right_right, down_left, down_down, down_right ]
+
+        numberOfBooombNeighbours : Int
+        numberOfBooombNeighbours =
+            List.foldr whassap 0 listOfNeighbouringSquares
+
+        newSquare =
+            { current_square | n_nabo_miner = numberOfBooombNeighbours }
+    in
+    newSquare
 
 
 
--- let
---     i = current_square.i
---     j = current_square.j
 --
---     up_left = isItABombAtThisPosition (i-1) j matrix
---     up_up = isItABombAtThisPosition i j matrix
---     up_right = isItABombAtThisPosition i j matrix
---     left_left = isItABombAtThisPosition i j matrix
---     right_right = isItABombAtThisPosition i j matrix
---     down_left = isItABombAtThisPosition i j matrix
---     down_down = isItABombAtThisPosition i j matrix
---     down_right = isItABombAtThisPosition i j matrix
--- in
+-- if numberOfBooombNeighbours == 0 then
+--     { current_square | square_content = BOOOMB }
+--
+-- else
+--     { current_square | n_nabo_miner = numberOfBooombNeighbours, square_content = ANumber numberOfBooombNeighbours }
+
+
+whassap : Maybe Square -> Int -> Int
+whassap maybeSquare int =
+    case maybeSquare of
+        Just aSquare ->
+            case aSquare.square_content of
+                BOOOMB ->
+                    int + 1
+
+                _ ->
+                    int
+
+        Nothing ->
+            int
+
+
+maybeGetASquareAt : Int -> Int -> Matrix -> Maybe Square
+maybeGetASquareAt i j matrix =
+    Array.get (i - 1) matrix
+        |> caseItProper j
+
+
+caseItProper : Int -> Maybe (Array Square) -> Maybe Square
+caseItProper j maybeColumn =
+    case maybeColumn of
+        Just aColumn ->
+            Array.get (j - 1) aColumn
+
+        Nothing ->
+            Nothing
+
+
+
 -- END

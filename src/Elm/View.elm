@@ -34,13 +34,13 @@ turnColumnIntoHtml arrayColumn =
 
 
 turnSquareIntoSomeHtmlStuff : Square -> Html Msg
-turnSquareIntoSomeHtmlStuff square =
-    case square.square_content of
+turnSquareIntoSomeHtmlStuff aSquare =
+    case aSquare.square_content of
         JustAnEmptySquare ->
-            div [ class "square" ] [ text (String.fromInt square.id) ]
+            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
 
         ANumber int ->
-            div [ class "square" ] [ text (String.fromInt square.id) ]
+            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
 
         BOOOMB ->
             div [ class "square" ] [ img [ src "images/red_bomb.png", class "bombimage" ] [] ]
@@ -50,7 +50,7 @@ viewListOfRandomNumbers : Model -> Html Msg
 viewListOfRandomNumbers model =
     case model.bombList of
         Just intList ->
-            List.foldl intANDstringTOstring baseString intList
+            List.foldl intANDstringTOstring "" intList
                 |> text
 
         Nothing ->
@@ -59,9 +59,4 @@ viewListOfRandomNumbers model =
 
 intANDstringTOstring : Int -> String -> String
 intANDstringTOstring int string =
-    String.fromInt int ++ baseString ++ string
-
-
-baseString : String
-baseString =
-    ", "
+    String.fromInt int ++ ", " ++ string
