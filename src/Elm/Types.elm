@@ -1,4 +1,4 @@
-module Elm.Types exposing (Board, GameStatus, Matrix, Square, SquareContent(..))
+module Elm.Types exposing (AntallNaboMiner(..), Board, GameStatus, Matrix, Square, SquareContent(..))
 
 import Array exposing (..)
 
@@ -15,6 +15,7 @@ type alias Square =
     , i : Int -- Column
     , j : Int -- Row
     , square_content : SquareContent
+    , n_nabo_miner : AntallNaboMiner
     }
 
 
@@ -33,3 +34,19 @@ type SquareContent
 
 type alias Matrix =
     Array (Array Square)
+
+
+type AntallNaboMiner
+    = Ingen
+    | En
+    | To
+    | Tre
+    | Fire
+    | Fem
+    | Seks
+    | Syv
+    | Atte
+
+
+
+-- END

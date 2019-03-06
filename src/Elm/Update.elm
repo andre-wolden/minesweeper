@@ -1,11 +1,12 @@
 module Elm.Update exposing (update)
 
 import Array exposing (..)
-import Elm.Constants exposing (n_bombs)
+import Elm.Constants as C
+import Elm.GenerateMatrixWithBombs exposing (..)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.RandomNumber exposing (..)
-import Elm.Types exposing (Matrix, Square, SquareContent(..))
+import Elm.Types exposing (AntallNaboMiner(..), Matrix, Square, SquareContent(..))
 import Random
 
 
@@ -19,57 +20,49 @@ update message model =
             ( model, Random.generate GotBombList randomListOfInt )
 
         GotBombList bombList ->
-            update NowGenerateAllTheSquares { model | bombList = Just bombList }
+            let
+                sorted_bomb_list : Maybe (List Int)
+                sorted_bomb_list =
+                    Just (List.sort bombList)
 
-        NowGenerateAllTheSquares ->
-            case model.bombList of
-                Just bombList ->
-                    ( { model | matrix = generateMatrix bombList model.board.n_columns model.board.n_rows }, Cmd.none )
+                matrix_with_bombs : Matrix
+                matrix_with_bombs =
+                    generateMatrixWithBombs bombList C.n_columns C.n_rows
 
-                Nothing ->
-                    ( model, Cmd.none )
-
-
-
--- GENERATING SQUARES STUFF
-
-
-generateMatrix : List Int -> Int -> Int -> Matrix
-generateMatrix bombList n_columns n_rows =
-    getDefaultMatrix n_columns n_rows
-        |> updateMatrixWithInfo bombList
+                matrix_with_neighbour_number : Matrix
+                matrix_with_neighbour_number =
+                    updateMatrixWithBombNeighbouringNumbers matrix_with_bombs
+            in
+            ( { model | matrix = matrix_with_bombs }, Cmd.none )
 
 
-updateMatrixWithInfo : List Int -> Matrix -> Matrix
-updateMatrixWithInfo bombList defaultMatrix =
-    Array.indexedMap updateColumn defaultMatrix
+updateMatrixWithBombNeighbouringNumbers : Matrix -> Matrix
+updateMatrixWithBombNeighbouringNumbers matrix =
+    Array.map (doThisForEachColumn matrix) matrix
 
 
-updateColumn : Int -> Array Square -> Array Square
-updateColumn column_index array_square =
-    Array.indexedMap (updateSquareInRow column_index) array_square
+doThisForEachColumn : Matrix -> Array Square -> Array Square
+doThisForEachColumn matrix column =
+    Array.map (doThisForEachSquareInColumn matrix) column
 
 
-updateSquareInRow : Int -> Int -> Square -> Square
-updateSquareInRow column_index row_index aSquare =
-    { id = 0, i = column_index, j = row_index, square_content = JustAnEmptySquare }
+doThisForEachSquareInColumn : Matrix -> Square -> Square
+doThisForEachSquareInColumn matrix current_square =
+    current_square
 
 
-getDefaultMatrix : Int -> Int -> Matrix
-getDefaultMatrix n_columns n_rows =
-    Array.repeat n_columns baseSquare
-        |> Array.repeat n_rows
 
-
-baseSquare : Square
-baseSquare =
-    { id = 0, i = 0, j = 0, square_content = JustAnEmptySquare }
-
-
-generateSquare : Int -> Int -> Int -> SquareContent -> Square
-generateSquare id i j square_content =
-    { id = id
-    , i = i -- Column
-    , j = j -- Row
-    , square_content = square_content
-    }
+-- let
+--     i = current_square.i
+--     j = current_square.j
+--
+--     up_left = isItABombAtThisPosition (i-1) j matrix
+--     up_up = isItABombAtThisPosition i j matrix
+--     up_right = isItABombAtThisPosition i j matrix
+--     left_left = isItABombAtThisPosition i j matrix
+--     right_right = isItABombAtThisPosition i j matrix
+--     down_left = isItABombAtThisPosition i j matrix
+--     down_down = isItABombAtThisPosition i j matrix
+--     down_right = isItABombAtThisPosition i j matrix
+-- in
+-- END

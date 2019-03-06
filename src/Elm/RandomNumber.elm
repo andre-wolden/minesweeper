@@ -12,6 +12,6 @@ randomNumber =
 
 randomListOfInt : Random.Generator (List Int)
 randomListOfInt =
-    List.range 0 n_squares
+    List.range 1 n_squares
         |> Random.List.shuffle
         |> Random.map (List.take n_bombs)

@@ -16,7 +16,34 @@ view model =
         , div [] [ text "------" ]
         , div [ class "board" ] [ text "List of Random Numbers:" ]
         , viewListOfRandomNumbers model
+        , div [ class "board" ] (insertMatrix model.matrix)
         ]
+
+
+insertMatrix : Matrix -> List (Html Msg)
+insertMatrix matrix =
+    Array.toList matrix
+        |> List.map turnColumnIntoHtml
+
+
+turnColumnIntoHtml : Array Square -> Html Msg
+turnColumnIntoHtml arrayColumn =
+    Array.toList arrayColumn
+        |> List.map turnSquareIntoSomeHtmlStuff
+        |> div [ class "column" ]
+
+
+turnSquareIntoSomeHtmlStuff : Square -> Html Msg
+turnSquareIntoSomeHtmlStuff square =
+    case square.square_content of
+        JustAnEmptySquare ->
+            div [ class "square" ] [ text (String.fromInt square.id) ]
+
+        ANumber int ->
+            div [ class "square" ] [ text (String.fromInt square.id) ]
+
+        BOOOMB ->
+            div [ class "square" ] [ img [ src "images/red_bomb.png", class "bombimage" ] [] ]
 
 
 viewListOfRandomNumbers : Model -> Html Msg

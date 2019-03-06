@@ -5,4 +5,8 @@ type Msg
     = NoOp
     | GenerateListOfRandomNumbersForNBombs
     | GotBombList (List Int)
-    | NowGenerateAllTheSquares
+
+
+
+-- | NowGenerateAllTheSquares
+-- | NowAssignNumberOfNeighbouringBombs

@@ -27,16 +27,27 @@ button {
 }
 
 .board {
-  width: 312px;
+  width: 800px;
   margin-top: 2rem;
-  border: 1px dotted red;
+  border: 1px dotted yellow;
+  background-color: white;
+}
+
+.column {
+  display: inline-flex;
+  border: 1px solid red
 }
 
 .square {
   border: 1px solid green;
-  height: 100px;
-  width: 100px;
+  height: 32px;
+  width: 32px;
   margin: 1px;
   overflow: hidden;
   display: inline-flex;
+}
+
+.bombimage {
+  height: 32px;
+  width: 32px;
 }
