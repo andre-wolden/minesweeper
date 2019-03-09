@@ -3,10 +3,12 @@ module Elm.Update exposing (update)
 import Array exposing (..)
 import Elm.Constants as C
 import Elm.GenerateMatrixWithBombs exposing (..)
+import Elm.MatrixAddBombNeighbouringNumber exposing (updateMatrixWithBombNeighbouringNumbers)
+import Elm.MatrixUtils exposing (..)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.RandomNumber exposing (..)
-import Elm.Types exposing (Matrix, Square, SquareContent(..))
+import Elm.Types exposing (GameState(..), Matrix, Square, SquareContent(..), SquareViewState(..))
 import Random
 
 
@@ -17,125 +19,106 @@ update message model =
             ( model, Cmd.none )
 
         GenerateListOfRandomNumbersForNBombs ->
-            ( model, Random.generate GotBombList randomListOfInt )
+            let
+                startingSquare =
+                    model.startingSquare
+
+                listOfNumbersToRemove =
+                    generateListOfNumbersToRemove model
+            in
+            ( model, Random.generate GotBombList (randomListOfIntAfterInitialClick listOfNumbersToRemove) )
 
         GotBombList bombList ->
-            let
-                sorted_bomb_list : Maybe (List Int)
-                sorted_bomb_list =
-                    Just (List.sort bombList)
+            case model.startingSquare of
+                Just shouldBeAStartingSquareAlways ->
+                    let
+                        sorted_bomb_list : Maybe (List Int)
+                        sorted_bomb_list =
+                            Just (List.sort bombList)
 
-                matrix_with_bombs : Matrix
-                matrix_with_bombs =
-                    generateMatrixWithBombs bombList C.n_columns C.n_rows
+                        matrix_with_bombs : Matrix
+                        matrix_with_bombs =
+                            generateMatrixWithBombs bombList C.n_columns C.n_rows
 
-                matrix_with_neighbour_number : Matrix
-                matrix_with_neighbour_number =
-                    updateMatrixWithBombNeighbouringNumbers matrix_with_bombs
-            in
-            ( { model | matrix = matrix_with_neighbour_number, bombList = Just bombList }, Cmd.none )
+                        matrix_with_neighbour_number : Matrix
+                        matrix_with_neighbour_number =
+                            updateMatrixWithBombNeighbouringNumbers matrix_with_bombs
+
+                        startingMatrixWithOneOpenSquare =
+                            openSquare matrix_with_neighbour_number shouldBeAStartingSquareAlways
+                    in
+                    ( { model
+                        | matrix = startingMatrixWithOneOpenSquare
+                        , bombList = Just bombList
+                        , gameState = InGame
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        OpenSquare squareToOpen ->
+            case model.gameState of
+                NotStarted ->
+                    let
+                        updated_model =
+                            { model | startingSquare = Just squareToOpen }
+                    in
+                    update GenerateListOfRandomNumbersForNBombs updated_model
+
+                InGame ->
+                    let
+                        updated_matrix =
+                            openSquare model.matrix squareToOpen
+                    in
+                    ( { model | matrix = updated_matrix }, Cmd.none )
 
 
-updateMatrixWithBombNeighbouringNumbers : Matrix -> Matrix
-updateMatrixWithBombNeighbouringNumbers matrix =
-    Array.map (doThisForEachColumn matrix) matrix
-
-
-doThisForEachColumn : Matrix -> Array Square -> Array Square
-doThisForEachColumn matrix column =
-    Array.map (doThisForEachSquareInColumn matrix) column
-
-
-doThisForEachSquareInColumn : Matrix -> Square -> Square
-doThisForEachSquareInColumn matrix current_square =
+openSquare : Matrix -> Square -> Matrix
+openSquare matrix squareToOpen =
     let
-        i =
-            current_square.i
+        squareToOpen_updated =
+            { squareToOpen | squareViewState = SquareViewStateOpen }
 
-        j =
-            current_square.j
+        maybeColumnToUpdate =
+            Array.get (squareToOpen.i - 1) matrix
 
-        up_left : Maybe Square
-        up_left =
-            maybeGetASquareAt (i - 1) (j - 1) matrix
-
-        up_up : Maybe Square
-        up_up =
-            maybeGetASquareAt i (j - 1) matrix
-
-        up_right : Maybe Square
-        up_right =
-            maybeGetASquareAt (i + 1) (j - 1) matrix
-
-        left_left : Maybe Square
-        left_left =
-            maybeGetASquareAt (i - 1) j matrix
-
-        right_right : Maybe Square
-        right_right =
-            maybeGetASquareAt (i + 1) j matrix
-
-        down_left : Maybe Square
-        down_left =
-            maybeGetASquareAt (i - 1) (j + 1) matrix
-
-        down_down : Maybe Square
-        down_down =
-            maybeGetASquareAt i (j + 1) matrix
-
-        down_right : Maybe Square
-        down_right =
-            maybeGetASquareAt (i + 1) (j + 1) matrix
-
-        listOfNeighbouringSquares : List (Maybe Square)
-        listOfNeighbouringSquares =
-            [ up_left, up_up, up_right, left_left, right_right, down_left, down_down, down_right ]
-
-        numberOfBooombNeighbours : Int
-        numberOfBooombNeighbours =
-            List.foldr whassap 0 listOfNeighbouringSquares
-
-        newSquare =
-            { current_square | n_nabo_miner = numberOfBooombNeighbours }
+        arrayToBeUpdated_updated =
+            updateArrayWithUpdatedSquare maybeColumnToUpdate squareToOpen_updated
     in
-    newSquare
+    Array.set (squareToOpen_updated.i - 1) arrayToBeUpdated_updated matrix
 
 
-
---
--- if numberOfBooombNeighbours == 0 then
---     { current_square | square_content = BOOOMB }
---
--- else
---     { current_square | n_nabo_miner = numberOfBooombNeighbours, square_content = ANumber numberOfBooombNeighbours }
-
-
-whassap : Maybe Square -> Int -> Int
-whassap maybeSquare int =
-    case maybeSquare of
-        Just aSquare ->
-            case aSquare.square_content of
-                BOOOMB ->
-                    int + 1
-
-                _ ->
-                    int
+updateArrayWithUpdatedSquare : Maybe (Array Square) -> Square -> Array Square
+updateArrayWithUpdatedSquare maybeSquareArray updated_square =
+    case maybeSquareArray of
+        Just arrayToBeUpdated ->
+            Array.set (updated_square.j - 1) updated_square arrayToBeUpdated
 
         Nothing ->
-            int
+            Array.empty
 
 
-maybeGetASquareAt : Int -> Int -> Matrix -> Maybe Square
-maybeGetASquareAt i j matrix =
-    Array.get (i - 1) matrix
-        |> caseItProper j
+generateListOfNumbersToRemove : Model -> List Int
+generateListOfNumbersToRemove model =
+    case model.startingSquare of
+        Just justStartingSquare ->
+            let
+                arrayOfMaybeSquare =
+                    getNeighbours model.matrix justStartingSquare.i justStartingSquare.j
+            in
+            List.filterMap squareToMaybeInt (toList arrayOfMaybeSquare)
+
+        Nothing ->
+            []
 
 
-caseItProper : Int -> Maybe (Array Square) -> Maybe Square
-caseItProper j maybeColumn =
-    case maybeColumn of
-        Just aColumn ->
-            Array.get (j - 1) aColumn
+squareToMaybeInt : Maybe Square -> Maybe Int
+squareToMaybeInt maybeSquare =
+    case maybeSquare of
+        Just aSquare ->
+            Just aSquare.id
 
         Nothing ->
             Nothing

@@ -3,9 +3,11 @@ port module Main exposing (init, main, toJs)
 import Array exposing (..)
 import Browser
 import Browser.Navigation as Nav
-import Elm.Constants as Constants
+import Elm.Constants as C
+import Elm.MatrixUtils exposing (generateDefaultMatrix)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
+import Elm.Types exposing (GameState(..))
 import Elm.Update exposing (update)
 import Elm.View exposing (view)
 
@@ -29,18 +31,21 @@ main =
 
 init : Int -> ( Model, Cmd Msg )
 init flags =
-    update GenerateListOfRandomNumbersForNBombs initModel
+    ( initModel, Cmd.none )
 
 
 initModel : Model
 initModel =
     { board =
-        { n_squares = Constants.n_squares
-        , n_rows = Constants.n_rows
-        , n_columns = Constants.n_columns
+        { n_squares = C.n_squares
+        , n_rows = C.n_rows
+        , n_columns = C.n_columns
         }
     , bombList = Nothing
-    , matrix = Array.empty
+    , matrix = generateDefaultMatrix C.n_columns C.n_rows
+    , loading = False
+    , gameState = NotStarted
+    , startingSquare = Nothing
     }
 
 

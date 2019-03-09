@@ -13,11 +13,23 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         [ text "My life, for Aiur"
-        , div [] [ text "------" ]
-        , div [ class "board" ] [ text "List of Random Numbers:" ]
-        , viewListOfRandomNumbers model
-        , div [ class "board" ] (insertMatrix model.matrix)
+        , viewSpinnerOrPage model
         ]
+
+
+viewSpinnerOrPage : Model -> Html Msg
+viewSpinnerOrPage model =
+    case model.loading of
+        True ->
+            div [ class "blockrow" ] [ text "Loading ..." ]
+
+        False ->
+            div [ class "blockrow" ]
+                [ div [ class "blockrow" ] [ text "------" ]
+                , div [ class "blockrow" ] [ text "List of Random Numbers:" ]
+                , div [ class "blockrow" ] [ viewListOfRandomNumbers model ]
+                , div [ class "blockrow" ] [ div [ class "board" ] (insertMatrix model.matrix) ]
+                ]
 
 
 insertMatrix : Matrix -> List (Html Msg)
@@ -35,15 +47,32 @@ turnColumnIntoHtml arrayColumn =
 
 turnSquareIntoSomeHtmlStuff : Square -> Html Msg
 turnSquareIntoSomeHtmlStuff aSquare =
+    case aSquare.squareViewState of
+        SquareViewStateClosed ->
+            div [ class "square_closed", onClick (OpenSquare aSquare) ] []
+
+        SquareViewStateOpen ->
+            let
+                string_content =
+                    stringContentOfSquare aSquare
+            in
+            div [ class "square_open", onClick (OpenSquare aSquare) ] [ text string_content ]
+
+        SquareViewStateFlagged ->
+            div [ class "square", onClick (OpenSquare aSquare) ] [ text (String.fromInt aSquare.n_nabo_miner) ]
+
+
+stringContentOfSquare : Square -> String
+stringContentOfSquare aSquare =
     case aSquare.square_content of
         JustAnEmptySquare ->
-            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
+            ""
 
         ANumber int ->
-            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
+            String.fromInt int
 
         BOOOMB ->
-            div [ class "square" ] [ img [ src "images/red_bomb.png", class "bombimage" ] [] ]
+            "X"
 
 
 viewListOfRandomNumbers : Model -> Html Msg

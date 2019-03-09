@@ -2,7 +2,7 @@ module Elm.GenerateMatrixWithBombs exposing (generateMatrixWithBombs)
 
 import Array exposing (..)
 import Elm.Constants as C
-import Elm.Types exposing (Matrix, Square, SquareContent(..))
+import Elm.Types exposing (Matrix, Square, SquareContent(..), SquareViewState(..))
 
 
 generateMatrixWithBombs : List Int -> Int -> Int -> Matrix
@@ -32,6 +32,7 @@ updateSquareInRow bombList column_index row_index aSquare =
     , j = row_index + 1
     , square_content = setBombIfBomb bombList currentSquareId
     , n_nabo_miner = 3
+    , squareViewState = SquareViewStateClosed
     }
 
 
@@ -62,4 +63,5 @@ baseSquare =
     , j = 0
     , square_content = JustAnEmptySquare
     , n_nabo_miner = 0
+    , squareViewState = SquareViewStateClosed
     }

@@ -1,4 +1,4 @@
-module Elm.Types exposing (Board, GameStatus, Matrix, Square, SquareContent(..))
+module Elm.Types exposing (Board, GameState(..), GameStatus, Matrix, Square, SquareContent(..), SquareViewState(..))
 
 import Array exposing (..)
 
@@ -16,7 +16,14 @@ type alias Square =
     , j : Int -- Row
     , square_content : SquareContent
     , n_nabo_miner : Int
+    , squareViewState : SquareViewState
     }
+
+
+type SquareViewState
+    = SquareViewStateClosed
+    | SquareViewStateOpen
+    | SquareViewStateFlagged
 
 
 type GameStatus
@@ -34,6 +41,11 @@ type SquareContent
 
 type alias Matrix =
     Array (Array Square)
+
+
+type GameState
+    = NotStarted
+    | InGame
 
 
 

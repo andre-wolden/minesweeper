@@ -4,11 +4,8 @@ body {
     background-color: #ddd;
     margin-top: 20px;
 }
-.container {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
+
+
 header {
     display: flex;
     align-items: center;
@@ -26,26 +23,48 @@ button {
     background-size: cover;
 }
 
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.blockrow {
+  display: block;
+}
+
 .board {
-  width: 800px;
+  display: inline-block;
   margin-top: 2rem;
-  border: 1px dotted yellow;
   background-color: white;
+  padding: 0px;
 }
 
 .column {
-  display: inline-flex;
-  border: 1px solid red
+  display: block;
+  margin: 0px;
 }
 
-.square {
-  border: 1px solid green;
+.square_closed {
+  border: 1px solid black;
   height: 32px;
   width: 32px;
-  margin: 1px;
   overflow: hidden;
   display: inline-flex;
+  background-color: grey;
 }
+
+.square_open {
+  border: 1px solid black;
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  display: inline-flex;
+  background-color: white;
+  font-size: 16px;
+  line-height: 55px;
+}
+
 
 .bombimage {
   height: 32px;
