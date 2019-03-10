@@ -1,4 +1,4 @@
-module Elm.MatrixUtils exposing (generateDefaultMatrix, getNeighbours)
+module Elm.MatrixUtils exposing (generateDefaultMatrix, getAllNeighbours, getAllNine)
 
 import Array exposing (..)
 import Elm.Constants as C
@@ -12,8 +12,52 @@ import Elm.Types exposing (Matrix, Square, SquareContent(..), SquareViewState(..
 -- 7, 8, 9
 
 
-getNeighbours : Matrix -> Int -> Int -> Array.Array (Maybe Square)
-getNeighbours matrix i j =
+getAllNeighbours : Matrix -> Int -> Int -> Array.Array (Maybe Square)
+getAllNeighbours matrix i j =
+    let
+        up_left : Maybe Square
+        up_left =
+            maybeGetASquareAt (i - 1) (j - 1) matrix
+
+        up_up : Maybe Square
+        up_up =
+            maybeGetASquareAt i (j - 1) matrix
+
+        up_right : Maybe Square
+        up_right =
+            maybeGetASquareAt (i + 1) (j - 1) matrix
+
+        left_left : Maybe Square
+        left_left =
+            maybeGetASquareAt (i - 1) j matrix
+
+        right_right : Maybe Square
+        right_right =
+            maybeGetASquareAt (i + 1) j matrix
+
+        down_left : Maybe Square
+        down_left =
+            maybeGetASquareAt (i - 1) (j + 1) matrix
+
+        down_down : Maybe Square
+        down_down =
+            maybeGetASquareAt i (j + 1) matrix
+
+        down_right : Maybe Square
+        down_right =
+            maybeGetASquareAt (i + 1) (j + 1) matrix
+    in
+    Array.fromList [ up_left, up_up, up_right, left_left, right_right, down_left, down_down, down_right ]
+
+
+
+-- 1, 2, 3
+-- 4, 5, 6
+-- 7, 8, 9
+
+
+getAllNine : Matrix -> Int -> Int -> Array.Array (Maybe Square)
+getAllNine matrix i j =
     let
         up_left : Maybe Square
         up_left =

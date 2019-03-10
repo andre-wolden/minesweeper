@@ -69,10 +69,131 @@ update message model =
 
                 InGame ->
                     let
+                        n_opened_so_far_updated =
+                            model.n_opened_so_far + 1
+
                         updated_matrix =
                             openSquare model.matrix squareToOpen
+
+                        isVictorious =
+                            checkIfVictorious n_opened_so_far_updated
                     in
-                    ( { model | matrix = updated_matrix }, Cmd.none )
+                    case squareToOpen.square_content of
+                        JustAnEmptySquare ->
+                            doTheTrickyPart model squareToOpen updated_matrix n_opened_so_far_updated isVictorious
+
+                        ANumber n_nabo_miner ->
+                            ( { model
+                                | matrix = updated_matrix
+                                , n_opened_so_far = n_opened_so_far_updated
+                                , gameState =
+                                    if isVictorious then
+                                        Victorious
+
+                                    else
+                                        InGame
+                              }
+                            , Cmd.none
+                            )
+
+                        BOOOMB ->
+                            ( { model
+                                | matrix = updated_matrix
+                                , gameState = Dead
+                                , n_opened_so_far = n_opened_so_far_updated
+                              }
+                            , Cmd.none
+                            )
+
+                Dead ->
+                    ( model, Cmd.none )
+
+                Victorious ->
+                    ( model, Cmd.none )
+
+
+
+-- { model
+--     | matrix = updated_matrix
+--     , n_opened_so_far = n_opened_so_far_updated
+--     , gameState =
+--         if isVictorious then
+--             Victorious
+--
+--         else
+--             InGame
+-- }
+
+
+doTheTrickyPart : Model -> Square -> Matrix -> Int -> Bool -> ( Model, Cmd Msg )
+doTheTrickyPart model squareToOpen updated_matrix n_opened_so_far_updated isVictorious =
+    ( { model
+        | matrix = updated_matrix
+        , n_opened_so_far = n_opened_so_far_updated
+        , gameState =
+            if isVictorious then
+                Victorious
+
+            else
+                InGame
+      }
+    , Cmd.none
+    )
+
+
+
+--     let
+--         neighbours =
+--             getAllNeighbours updated_matrix squareToOpen.i squareToOpen.j
+--     in
+--     Array.toList neighbours
+--         |> List.filterMap keepSquareIfJustSquare
+--         |> List.map
+--             (\aSquareToOpen ->
+--                 update (OpenSquare aSquareToOpen)
+--                     { model
+--                         | matrix = updated_matrix
+--                         , n_opened_so_far = n_opened_so_far_updated
+--                         , gameState =
+--                             if isVictorious then
+--                                 Victorious
+--
+--                             else
+--                                 InGame
+--                     }
+--             )
+--         |> List.reverse
+--         |> List.head
+--         |> andThenCaseTheAnswer model
+--
+--
+-- andThenCaseTheAnswer : Model -> Maybe ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+-- andThenCaseTheAnswer oldModel msgCmdModelMaybe =
+--     case msgCmdModelMaybe of
+--         Just ( model, msgCmd ) ->
+--             ( model, msgCmd )
+--
+--         Nothing ->
+--             ( oldModel, Cmd.none )
+
+
+keepSquareIfJustSquare : Maybe Square -> Maybe Square
+keepSquareIfJustSquare maybeSquare =
+    case maybeSquare of
+        Just aSquare ->
+            Just aSquare
+
+        Nothing ->
+            Nothing
+
+
+checkIfVictorious : Int -> Bool
+checkIfVictorious n_opened_so_far_updated =
+    if n_opened_so_far_updated == (C.n_squares - C.n_bombs) then
+        True
+
+    else
+        False
 
 
 openSquare : Matrix -> Square -> Matrix
@@ -106,7 +227,7 @@ generateListOfNumbersToRemove model =
         Just justStartingSquare ->
             let
                 arrayOfMaybeSquare =
-                    getNeighbours model.matrix justStartingSquare.i justStartingSquare.j
+                    getAllNine model.matrix justStartingSquare.i justStartingSquare.j
             in
             List.filterMap squareToMaybeInt (toList arrayOfMaybeSquare)
 

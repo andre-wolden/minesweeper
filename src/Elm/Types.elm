@@ -46,6 +46,8 @@ type alias Matrix =
 type GameState
     = NotStarted
     | InGame
+    | Dead
+    | Victorious
 
 
 

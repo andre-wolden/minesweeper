@@ -29,7 +29,24 @@ viewSpinnerOrPage model =
                 , div [ class "blockrow" ] [ text "List of Random Numbers:" ]
                 , div [ class "blockrow" ] [ viewListOfRandomNumbers model ]
                 , div [ class "blockrow" ] [ div [ class "board" ] (insertMatrix model.matrix) ]
+                , div [ class "blockrow" ] [ text (viewGameState model.gameState) ]
                 ]
+
+
+viewGameState : GameState -> String
+viewGameState gameState =
+    case gameState of
+        NotStarted ->
+            "Not Started"
+
+        InGame ->
+            "In Game"
+
+        Dead ->
+            "BOOOOM!"
+
+        Victorious ->
+            "Victory !"
 
 
 insertMatrix : Matrix -> List (Html Msg)

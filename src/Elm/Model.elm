@@ -11,4 +11,5 @@ type alias Model =
     , loading : Bool
     , gameState : GameState
     , startingSquare : Maybe Square
+    , n_opened_so_far : Int
     }
