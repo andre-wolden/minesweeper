@@ -3,7 +3,7 @@ module Elm.Constants exposing (n_bombs, n_columns, n_rows, n_squares)
 
 n_bombs : Int
 n_bombs =
-    16
+    3
 
 
 n_squares : Int
@@ -13,9 +13,9 @@ n_squares =
 
 n_rows : Int
 n_rows =
-    12
+    4
 
 
 n_columns : Int
 n_columns =
-    12
+    4

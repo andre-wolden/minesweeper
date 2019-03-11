@@ -73,10 +73,10 @@ turnSquareIntoSomeHtmlStuff aSquare =
                 string_content =
                     stringContentOfSquare aSquare
             in
-            div [ class "square_open", onClick (OpenSquare aSquare) ] [ text string_content ]
+            div [ class "square_open" ] [ text string_content ]
 
         SquareViewStateFlagged ->
-            div [ class "square", onClick (OpenSquare aSquare) ] [ text (String.fromInt aSquare.n_nabo_miner) ]
+            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
 
 
 stringContentOfSquare : Square -> String

@@ -63,7 +63,7 @@ update message model =
                 NotStarted ->
                     let
                         updated_model =
-                            { model | startingSquare = Just squareToOpen }
+                            { model | startingSquare = Just squareToOpen, n_opened_so_far = 1 }
                     in
                     update GenerateListOfRandomNumbersForNBombs updated_model
 
