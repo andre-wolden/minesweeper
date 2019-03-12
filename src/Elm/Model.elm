@@ -12,4 +12,5 @@ type alias Model =
     , gameState : GameState
     , startingSquare : Maybe Square
     , n_opened_so_far : Int
+    , debug_remaining : List Square
     }

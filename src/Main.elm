@@ -47,6 +47,7 @@ initModel =
     , gameState = NotStarted
     , startingSquare = Nothing
     , n_opened_so_far = 0
+    , debug_remaining = []
     }
 
 

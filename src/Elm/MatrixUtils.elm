@@ -1,18 +1,89 @@
-module Elm.MatrixUtils exposing (generateDefaultMatrix, getAllNeighbours, getAllNine)
+module Elm.MatrixUtils exposing
+    ( Dota
+    , addIJIDtoMatrix
+    , baseSquare
+    , calculateSquareId
+    , checkIfVictorious
+    , generateDefaultMatrix
+    , generateListOfNumbersToRemove
+    , generateMatrixAndPopulateWithBaseSquare
+    , getAllNeighbours
+    , getAllNine
+    , getListOfEmptyButStillClosedNeighbours
+    , getListOfEmptyNeighbours
+    , openAllNeighbours
+    , openNeighboursRecursively
+    , openSquare
+    , squareToMaybeInt
+    , toSquare
+    , updateArrayWithUpdatedSquare
+    , updateColumn
+    , updateSquareInRow
+    )
 
 import Array exposing (..)
 import Elm.Constants as C
 import Elm.MatrixAddBombNeighbouringNumber exposing (maybeGetASquareAt)
+import Elm.Model exposing (..)
 import Elm.Types exposing (Matrix, Square, SquareContent(..), SquareViewState(..))
+
+
+type alias Dota =
+    { closedNeighbours : List Square
+    , matrix : Matrix
+    }
+
+
+openAllNeighbours : Matrix -> Square -> Matrix
+openAllNeighbours matrix aSquare =
+    let
+        closedNeighbours =
+            getAllClosedNeighbours matrix aSquare.i aSquare.j
+
+        init_dota =
+            { closedNeighbours = closedNeighbours, matrix = matrix }
+
+        final_dota =
+            openNeighboursRecursively init_dota
+    in
+    final_dota.matrix
+
+
+openNeighboursRecursively : Dota -> Dota
+openNeighboursRecursively dota =
+    let
+        next_to_open =
+            List.head dota.closedNeighbours
+
+        matrix_updated =
+            case next_to_open of
+                Just the_next_one_to_open ->
+                    openSquare dota.matrix the_next_one_to_open
+
+                Nothing ->
+                    dota.matrix
+
+        closedNeighbours_updated =
+            List.tail dota.closedNeighbours
+    in
+    case closedNeighbours_updated of
+        Just [] ->
+            { closedNeighbours = [], matrix = matrix_updated }
+
+        Just aListWithContent ->
+            openNeighboursRecursively { closedNeighbours = aListWithContent, matrix = matrix_updated }
+
+        Nothing ->
+            { closedNeighbours = [], matrix = matrix_updated }
 
 
 
 -- 1, 2, 3
--- 4, 5, 6
+-- 4,  , 6
 -- 7, 8, 9
 
 
-getAllNeighbours : Matrix -> Int -> Int -> Array.Array (Maybe Square)
+getAllNeighbours : Matrix -> Int -> Int -> List Square
 getAllNeighbours matrix i j =
     let
         up_left : Maybe Square
@@ -47,7 +118,18 @@ getAllNeighbours matrix i j =
         down_right =
             maybeGetASquareAt (i + 1) (j + 1) matrix
     in
-    Array.fromList [ up_left, up_up, up_right, left_left, right_right, down_left, down_down, down_right ]
+    [ up_left, up_up, up_right, left_left, right_right, down_left, down_down, down_right ]
+        |> List.filterMap toSquare
+
+
+toSquare : Maybe Square -> Maybe Square
+toSquare squareMaybe =
+    case squareMaybe of
+        Just square ->
+            Just square
+
+        Nothing ->
+            Nothing
 
 
 
@@ -153,3 +235,137 @@ updateSquareInRow column_index row_index aSquare =
 calculateSquareId : Int -> Int -> Int
 calculateSquareId row_index column_index =
     C.n_columns * row_index + column_index + 1
+
+
+checkIfVictorious : Int -> Bool
+checkIfVictorious n_opened_so_far_updated =
+    if n_opened_so_far_updated == (C.n_squares - C.n_bombs) then
+        True
+
+    else
+        False
+
+
+openSquare : Matrix -> Square -> Matrix
+openSquare matrix squareToOpen =
+    let
+        squareToOpen_updated =
+            { squareToOpen | squareViewState = SquareViewStateOpen }
+
+        maybeColumnToUpdate =
+            Array.get (squareToOpen.i - 1) matrix
+
+        arrayToBeUpdated_updated =
+            updateArrayWithUpdatedSquare maybeColumnToUpdate squareToOpen_updated
+    in
+    Array.set (squareToOpen_updated.i - 1) arrayToBeUpdated_updated matrix
+
+
+updateArrayWithUpdatedSquare : Maybe (Array Square) -> Square -> Array Square
+updateArrayWithUpdatedSquare maybeSquareArray updated_square =
+    case maybeSquareArray of
+        Just arrayToBeUpdated ->
+            Array.set (updated_square.j - 1) updated_square arrayToBeUpdated
+
+        Nothing ->
+            Array.empty
+
+
+generateListOfNumbersToRemove : Model -> List Int
+generateListOfNumbersToRemove model =
+    case model.startingSquare of
+        Just justStartingSquare ->
+            let
+                arrayOfMaybeSquare =
+                    getAllNine model.matrix justStartingSquare.i justStartingSquare.j
+            in
+            List.filterMap squareToMaybeInt (toList arrayOfMaybeSquare)
+
+        Nothing ->
+            []
+
+
+squareToMaybeInt : Maybe Square -> Maybe Int
+squareToMaybeInt maybeSquare =
+    case maybeSquare of
+        Just aSquare ->
+            Just aSquare.id
+
+        Nothing ->
+            Nothing
+
+
+getAllClosedNeighbours : Matrix -> Int -> Int -> List Square
+getAllClosedNeighbours matrix i j =
+    let
+        neighbours =
+            getAllNeighbours matrix i j
+    in
+    List.filter neighbourIsClosed neighbours
+
+
+neighbourIsClosed : Square -> Bool
+neighbourIsClosed aSquare =
+    case aSquare.squareViewState of
+        SquareViewStateClosed ->
+            True
+
+        _ ->
+            False
+
+
+keepSquareIfJustSquare : Maybe Square -> Maybe Square
+keepSquareIfJustSquare maybeSquare =
+    case maybeSquare of
+        Just aSquare ->
+            Just aSquare
+
+        Nothing ->
+            Nothing
+
+
+neighbourIsClosedAndEmpty : Square -> Bool
+neighbourIsClosedAndEmpty aSquare =
+    case aSquare.squareViewState of
+        SquareViewStateClosed ->
+            case aSquare.square_content of
+                JustAnEmptySquare ->
+                    True
+
+                _ ->
+                    False
+
+        _ ->
+            False
+
+
+neighbourIsEmpty : Square -> Bool
+neighbourIsEmpty aSquare =
+    case aSquare.square_content of
+        JustAnEmptySquare ->
+            True
+
+        _ ->
+            False
+
+
+getListOfEmptyButStillClosedNeighbours : Matrix -> Int -> Int -> List Square
+getListOfEmptyButStillClosedNeighbours matrix i j =
+    let
+        neighbours =
+            getAllNeighbours matrix i j
+    in
+    List.filter neighbourIsClosedAndEmpty neighbours
+
+
+getListOfEmptyNeighbours : Matrix -> Int -> Int -> List Square
+getListOfEmptyNeighbours matrix i j =
+    let
+        neighbours =
+            getAllNeighbours matrix i j
+    in
+    List.filter neighbourIsEmpty neighbours
+
+
+
+-- END

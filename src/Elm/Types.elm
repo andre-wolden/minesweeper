@@ -1,4 +1,4 @@
-module Elm.Types exposing (Board, GameState(..), GameStatus, Matrix, Square, SquareContent(..), SquareViewState(..))
+module Elm.Types exposing (AlgDat, Board, GameState(..), GameStatus, Matrix, Square, SquareContent(..), SquareViewState(..))
 
 import Array exposing (..)
 
@@ -48,6 +48,15 @@ type GameState
     | InGame
     | Dead
     | Victorious
+
+
+type alias AlgDat =
+    { remaining : List Square
+    , current_matrix : Matrix
+    , current_square : Square
+    , done : List Square
+    , debug_remaining : List Square
+    }
 
 
 

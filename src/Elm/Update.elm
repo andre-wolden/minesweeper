@@ -8,6 +8,7 @@ import Elm.MatrixUtils exposing (..)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.RandomNumber exposing (..)
+import Elm.RecursiveOpening exposing (doTheTrickyPart)
 import Elm.Types exposing (GameState(..), Matrix, Square, SquareContent(..), SquareViewState(..))
 import Random
 
@@ -110,139 +111,6 @@ update message model =
 
                 Victorious ->
                     ( model, Cmd.none )
-
-
-
--- { model
---     | matrix = updated_matrix
---     , n_opened_so_far = n_opened_so_far_updated
---     , gameState =
---         if isVictorious then
---             Victorious
---
---         else
---             InGame
--- }
-
-
-doTheTrickyPart : Model -> Square -> Matrix -> Int -> Bool -> ( Model, Cmd Msg )
-doTheTrickyPart model squareToOpen updated_matrix n_opened_so_far_updated isVictorious =
-    ( { model
-        | matrix = updated_matrix
-        , n_opened_so_far = n_opened_so_far_updated
-        , gameState =
-            if isVictorious then
-                Victorious
-
-            else
-                InGame
-      }
-    , Cmd.none
-    )
-
-
-
---     let
---         neighbours =
---             getAllNeighbours updated_matrix squareToOpen.i squareToOpen.j
---     in
---     Array.toList neighbours
---         |> List.filterMap keepSquareIfJustSquare
---         |> List.map
---             (\aSquareToOpen ->
---                 update (OpenSquare aSquareToOpen)
---                     { model
---                         | matrix = updated_matrix
---                         , n_opened_so_far = n_opened_so_far_updated
---                         , gameState =
---                             if isVictorious then
---                                 Victorious
---
---                             else
---                                 InGame
---                     }
---             )
---         |> List.reverse
---         |> List.head
---         |> andThenCaseTheAnswer model
---
---
--- andThenCaseTheAnswer : Model -> Maybe ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
--- andThenCaseTheAnswer oldModel msgCmdModelMaybe =
---     case msgCmdModelMaybe of
---         Just ( model, msgCmd ) ->
---             ( model, msgCmd )
---
---         Nothing ->
---             ( oldModel, Cmd.none )
-
-
-keepSquareIfJustSquare : Maybe Square -> Maybe Square
-keepSquareIfJustSquare maybeSquare =
-    case maybeSquare of
-        Just aSquare ->
-            Just aSquare
-
-        Nothing ->
-            Nothing
-
-
-checkIfVictorious : Int -> Bool
-checkIfVictorious n_opened_so_far_updated =
-    if n_opened_so_far_updated == (C.n_squares - C.n_bombs) then
-        True
-
-    else
-        False
-
-
-openSquare : Matrix -> Square -> Matrix
-openSquare matrix squareToOpen =
-    let
-        squareToOpen_updated =
-            { squareToOpen | squareViewState = SquareViewStateOpen }
-
-        maybeColumnToUpdate =
-            Array.get (squareToOpen.i - 1) matrix
-
-        arrayToBeUpdated_updated =
-            updateArrayWithUpdatedSquare maybeColumnToUpdate squareToOpen_updated
-    in
-    Array.set (squareToOpen_updated.i - 1) arrayToBeUpdated_updated matrix
-
-
-updateArrayWithUpdatedSquare : Maybe (Array Square) -> Square -> Array Square
-updateArrayWithUpdatedSquare maybeSquareArray updated_square =
-    case maybeSquareArray of
-        Just arrayToBeUpdated ->
-            Array.set (updated_square.j - 1) updated_square arrayToBeUpdated
-
-        Nothing ->
-            Array.empty
-
-
-generateListOfNumbersToRemove : Model -> List Int
-generateListOfNumbersToRemove model =
-    case model.startingSquare of
-        Just justStartingSquare ->
-            let
-                arrayOfMaybeSquare =
-                    getAllNine model.matrix justStartingSquare.i justStartingSquare.j
-            in
-            List.filterMap squareToMaybeInt (toList arrayOfMaybeSquare)
-
-        Nothing ->
-            []
-
-
-squareToMaybeInt : Maybe Square -> Maybe Int
-squareToMaybeInt maybeSquare =
-    case maybeSquare of
-        Just aSquare ->
-            Just aSquare.id
-
-        Nothing ->
-            Nothing
 
 
 
