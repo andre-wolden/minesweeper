@@ -48,13 +48,7 @@ update message model =
                         startingMatrixWithOneOpenSquare =
                             openSquare matrix_with_neighbour_number shouldBeAStartingSquareAlways
                     in
-                    ( { model
-                        | matrix = startingMatrixWithOneOpenSquare
-                        , bombList = Just bombList
-                        , gameState = InGame
-                      }
-                    , Cmd.none
-                    )
+                    doTheTrickyPart model shouldBeAStartingSquareAlways startingMatrixWithOneOpenSquare 1 False
 
                 Nothing ->
                     ( model, Cmd.none )
