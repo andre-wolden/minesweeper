@@ -47,8 +47,12 @@ update message model =
 
                         startingMatrixWithOneOpenSquare =
                             openSquare matrix_with_neighbour_number shouldBeAStartingSquareAlways
+
+                        isVictorious : Bool
+                        isVictorious =
+                            seeIfVictorious startingMatrixWithOneOpenSquare
                     in
-                    doTheTrickyPart model shouldBeAStartingSquareAlways startingMatrixWithOneOpenSquare 1 False
+                    doTheTrickyPart model shouldBeAStartingSquareAlways startingMatrixWithOneOpenSquare 1 isVictorious
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -71,7 +75,7 @@ update message model =
                             openSquare model.matrix squareToOpen
 
                         isVictorious =
-                            checkIfVictorious n_opened_so_far_updated
+                            seeIfVictorious updated_matrix
                     in
                     case squareToOpen.square_content of
                         JustAnEmptySquare ->
@@ -105,6 +109,37 @@ update message model =
 
                 Victorious ->
                     ( model, Cmd.none )
+
+
+seeIfVictorious : Matrix -> Bool
+seeIfVictorious matrix =
+    Array.map noRemainingClosedSquaresInArray matrix
+        |> Array.toList
+        |> List.member False
+        |> not
+
+
+noRemainingClosedSquaresInArray : Array Square -> Bool
+noRemainingClosedSquaresInArray squareArray =
+    Array.map squareIsOpenOrBombSquare squareArray
+        |> Array.toList
+        |> List.member False
+        |> not
+
+
+squareIsOpenOrBombSquare : Square -> Bool
+squareIsOpenOrBombSquare aSquare =
+    case aSquare.square_content of
+        BOOOMB ->
+            True
+
+        _ ->
+            case aSquare.squareViewState of
+                SquareViewStateOpen ->
+                    True
+
+                _ ->
+                    False
 
 
 
