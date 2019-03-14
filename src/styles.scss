@@ -65,6 +65,15 @@ button {
   line-height: 55px;
 }
 
+.square_flagged {
+  border: 1px solid black;
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  display: inline-flex;
+  background-color: red;
+}
+
 
 .bombimage {
   height: 32px;

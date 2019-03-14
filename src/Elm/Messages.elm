@@ -8,6 +8,7 @@ type Msg
     | GenerateListOfRandomNumbersForNBombs
     | GotBombList (List Int)
     | OpenSquare Square
+    | ToggleFlag Square
 
 
 

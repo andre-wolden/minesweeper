@@ -26,8 +26,11 @@ update message model =
 
                 listOfNumbersToRemove =
                     generateListOfNumbersToRemove model
+
+                random_list =
+                    randomListOfIntAfterInitialClick listOfNumbersToRemove
             in
-            ( model, Random.generate GotBombList (randomListOfIntAfterInitialClick listOfNumbersToRemove) )
+            ( model, Random.generate GotBombList random_list )
 
         GotBombList bombList ->
             case model.startingSquare of
@@ -36,6 +39,9 @@ update message model =
                         sorted_bomb_list : Maybe (List Int)
                         sorted_bomb_list =
                             Just (List.sort bombList)
+
+                        _ =
+                            Debug.log "Random list: " sorted_bomb_list
 
                         matrix_with_bombs : Matrix
                         matrix_with_bombs =
@@ -61,6 +67,9 @@ update message model =
             case model.gameState of
                 NotStarted ->
                     let
+                        _ =
+                            Debug.log "Hei" 13
+
                         updated_model =
                             { model | startingSquare = Just squareToOpen, n_opened_so_far = 1 }
                     in
@@ -109,6 +118,16 @@ update message model =
 
                 Victorious ->
                     ( model, Cmd.none )
+
+        ToggleFlag aSquare ->
+            let
+                _ =
+                    Debug.log "Toggle Flag ass" 13
+
+                matrix_updated =
+                    toggleFlagOnSquare model.matrix aSquare
+            in
+            ( { model | matrix = matrix_updated }, Cmd.none )
 
 
 seeIfVictorious : Matrix -> Bool

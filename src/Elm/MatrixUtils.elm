@@ -16,6 +16,7 @@ module Elm.MatrixUtils exposing
     , openSquare
     , squareToMaybeInt
     , toSquare
+    , toggleFlagOnSquare
     , updateArrayWithUpdatedSquare
     , updateColumn
     , updateSquareInRow
@@ -244,6 +245,37 @@ checkIfVictorious n_opened_so_far_updated =
 
     else
         False
+
+
+
+-- Flagging
+
+
+toggleFlagOnSquare : Matrix -> Square -> Matrix
+toggleFlagOnSquare matrix squareToToggleFlag =
+    let
+        squareToToggleFlag_updated =
+            case squareToToggleFlag.squareViewState of
+                SquareViewStateClosed ->
+                    { squareToToggleFlag | squareViewState = SquareViewStateFlagged }
+
+                SquareViewStateOpen ->
+                    squareToToggleFlag
+
+                SquareViewStateFlagged ->
+                    { squareToToggleFlag | squareViewState = SquareViewStateClosed }
+
+        maybeColumnToUpdate =
+            Array.get (squareToToggleFlag.i - 1) matrix
+
+        arrayToBeUpdated_updated =
+            updateArrayWithUpdatedSquare maybeColumnToUpdate squareToToggleFlag_updated
+    in
+    Array.set (squareToToggleFlag_updated.i - 1) arrayToBeUpdated_updated matrix
+
+
+
+-- OPENING
 
 
 openSquare : Matrix -> Square -> Matrix

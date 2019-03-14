@@ -2,6 +2,10 @@
 
 require("./styles.scss");
 
+document.addEventListener("contextmenu", function(e){
+      e.preventDefault();
+    }, false);
+
 const {Elm} = require('./Main');
 var app = Elm.Main.init({flags: 6});
 

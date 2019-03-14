@@ -1,6 +1,7 @@
 module Elm.View exposing (view)
 
 import Array exposing (..)
+import Elm.Flag exposing (..)
 import Elm.Messages exposing (..)
 import Elm.Model exposing (Model)
 import Elm.Types exposing (..)
@@ -30,6 +31,7 @@ viewSpinnerOrPage model =
                 , div [ class "blockrow" ] [ viewListOfRandomNumbers model ]
                 , div [ class "blockrow" ] [ div [ class "board" ] (insertMatrix model.matrix) ]
                 , div [ class "blockrow" ] [ text (viewGameState model.gameState) ]
+                , div [ class "blockrow" ] []
                 ]
 
 
@@ -66,7 +68,7 @@ turnSquareIntoSomeHtmlStuff : Square -> Html Msg
 turnSquareIntoSomeHtmlStuff aSquare =
     case aSquare.squareViewState of
         SquareViewStateClosed ->
-            div [ class "square_closed", onClick (OpenSquare aSquare) ] []
+            div [ class "square_closed", onClick (OpenSquare aSquare), onRightClick (ToggleFlag aSquare) ] []
 
         SquareViewStateOpen ->
             let
@@ -76,7 +78,7 @@ turnSquareIntoSomeHtmlStuff aSquare =
             div [ class "square_open" ] [ text string_content ]
 
         SquareViewStateFlagged ->
-            div [ class "square" ] [ text (String.fromInt aSquare.n_nabo_miner) ]
+            div [ class "square_flagged", onRightClick (ToggleFlag aSquare) ] []
 
 
 stringContentOfSquare : Square -> String

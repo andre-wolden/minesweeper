@@ -31,7 +31,7 @@ updateSquareInRow bombList column_index row_index aSquare =
     , i = column_index + 1
     , j = row_index + 1
     , square_content = setBombIfBomb bombList currentSquareId
-    , n_nabo_miner = 3
+    , n_nabo_miner = 0
     , squareViewState = SquareViewStateClosed
     }
 
@@ -39,16 +39,32 @@ updateSquareInRow bombList column_index row_index aSquare =
 calculateSquareId : Int -> Int -> Int
 calculateSquareId row_index column_index =
     C.n_rows * row_index + column_index + 1
-    -- C.n_rows * row_index + column_index + 1
+
+
+
+-- C.n_rows * row_index + column_index + 1
 
 
 setBombIfBomb : List Int -> Int -> SquareContent
 setBombIfBomb intList squareId =
-    if List.any (\el -> el == squareId) intList then
-        BOOOMB
+    let
+        inBombList =
+            List.member squareId intList
+    in
+    case inBombList of
+        True ->
+            BOOOMB
 
-    else
-        JustAnEmptySquare
+        False ->
+            JustAnEmptySquare
+
+
+
+-- if List.any (\el -> el == squareId) intList then
+--     BOOOMB
+--
+-- else
+--     JustAnEmptySquare
 
 
 getDefaultMatrix : Int -> Int -> Matrix
