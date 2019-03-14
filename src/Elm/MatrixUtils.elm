@@ -234,7 +234,7 @@ updateSquareInRow column_index row_index aSquare =
 
 calculateSquareId : Int -> Int -> Int
 calculateSquareId row_index column_index =
-    C.n_columns * row_index + column_index + 1
+    C.n_rows * row_index + column_index + 1
 
 
 checkIfVictorious : Int -> Bool
