@@ -29,6 +29,7 @@ viewSpinnerOrPage model =
                 [ div [ class "blockrow" ] [ text "------" ]
                 , div [ class "blockrow" ] [ text "List of Random Numbers:" ]
                 , div [ class "blockrow" ] [ viewListOfRandomNumbers model ]
+                , div [] [ img [ class "background_picture", src "images/minesweeper_background.png" ] [] ]
                 , div [ class "blockrow" ] [ div [ class "board" ] (insertMatrix model.matrix) ]
                 , div [ class "blockrow" ] [ text (viewGameState model.gameState) ]
                 , div [ class "blockrow" ] []
@@ -68,17 +69,21 @@ turnSquareIntoSomeHtmlStuff : Square -> Html Msg
 turnSquareIntoSomeHtmlStuff aSquare =
     case aSquare.squareViewState of
         SquareViewStateClosed ->
-            div [ class "square_closed", onClick (OpenSquare aSquare), onRightClick (ToggleFlag aSquare) ] []
+            div [ class "square square_closed", onClick (OpenSquare aSquare), onRightClick (ToggleFlag aSquare) ]
+                [ img [ class "square_img", src "images/closed.png" ] []
+                ]
 
         SquareViewStateOpen ->
             let
                 string_content =
                     stringContentOfSquare aSquare
             in
-            div [ class "square_open" ] [ text string_content ]
+            div [ class "square square_open" ] [ text string_content ]
 
         SquareViewStateFlagged ->
-            div [ class "square_flagged", onRightClick (ToggleFlag aSquare) ] []
+            div [ class "square square_flagged", onRightClick (ToggleFlag aSquare) ]
+                [ img [ class "square_img", src "images/flagged.png" ] []
+                ]
 
 
 stringContentOfSquare : Square -> String

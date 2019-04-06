@@ -37,40 +37,46 @@ button {
   display: inline-block;
   margin-top: 2rem;
   background-color: white;
-  padding: 0px;
+  padding: 0;
+}
+
+.background_picture {
+  position: absolute;
+  width: 548px;
+  top: 66px;
+  left: 569px;
+  z-index: -1;
 }
 
 .column {
   display: block;
-  margin: 0px;
+  margin: 0;
+  height: 32px;
+}
+
+.square {
+  overflow: hidden;
+  display: inline-block;
+  height: 32px;
+  width: 32px;
 }
 
 .square_closed {
-  border: 1px solid black;
-  height: 32px;
-  width: 32px;
-  overflow: hidden;
-  display: inline-flex;
   background-color: grey;
 }
 
-.square_open {
-  border: 1px solid black;
-  height: 32px;
+.square_img {
   width: 32px;
-  overflow: hidden;
-  display: inline-flex;
-  background-color: white;
-  font-size: 16px;
-  line-height: 55px;
 }
 
+.square_open {
+  background-color: white;
+  background-image: url("images/open_nothing.png");
+  background-size: 32px;
+}
+
+
 .square_flagged {
-  border: 1px solid black;
-  height: 32px;
-  width: 32px;
-  overflow: hidden;
-  display: inline-flex;
   background-color: red;
 }
 
