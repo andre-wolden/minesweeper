@@ -1,9 +1,9 @@
-module Elm.Constants exposing (n_bombs, n_columns, n_rows, n_squares)
+module Elm.Constants exposing (n_bombs, n_columns, n_rows, n_squares, squareWidth)
 
 
 n_bombs : Int
 n_bombs =
-    22
+    99
 
 
 n_squares : Int
@@ -13,9 +13,14 @@ n_squares =
 
 n_rows : Int
 n_rows =
-    8
+    12
 
 
 n_columns : Int
 n_columns =
-    16
+    30
+
+
+squareWidth : Int
+squareWidth =
+    32

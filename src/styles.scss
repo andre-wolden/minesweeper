@@ -1,7 +1,8 @@
 @import '~purecss/build/pure.css';
 
 body {
-    background-color: #ddd;
+    //background-color: rgb(255, 255, 255);
+    background-color: white;
     margin-top: 20px;
 }
 
@@ -24,6 +25,7 @@ button {
 }
 
 .container {
+  margin-top: 3rem;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -54,11 +56,13 @@ button {
   height: 32px;
 }
 
+$square_widht: 32;
+
 .square {
   overflow: hidden;
   display: inline-block;
-  height: 32px;
-  width: 32px;
+  height: $square_widht;
+  width: $square_widht;
 }
 
 .square_closed {
@@ -84,4 +88,44 @@ button {
 .bombimage {
   height: 32px;
   width: 32px;
+}
+
+.debug_wrapper {
+  text-align: left;
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+}
+
+.debug {
+  display: inline-block;
+}
+
+$grey: #000000;
+$light-grey: #000000;
+$dark-grey: #000000;
+
+$border_width: 32;
+$inner_top_height: 64;
+
+.svgExperimentation {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: 1px solid black;
+  width: 1026px;
+  height: 482px;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.svg_experiment {
+  width: 1024px;
+  height: 480px;
+}
+
+.svg_matrix {
+  width: 1080px;
+  height: 480px;
+  border: 1px dotted red;
 }
