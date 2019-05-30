@@ -5,7 +5,6 @@ import Elm.Constants as C
 import Elm.Flag exposing (..)
 import Elm.Messages exposing (..)
 import Elm.Model exposing (Model)
-import Elm.SvgExperimentation exposing (svgExperimentation)
 import Elm.Types exposing (..)
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
@@ -99,17 +98,9 @@ turnSquareIntoSomeHtmlStuff aSquare =
             svgOpenEmptySquare aSquare
 
         SquareViewStateFlagged ->
-            -- div [ class "square square_flagged", onRightClick (ToggleFlag aSquare) ]
-            --     [ img [ class "square_img", src "images/flagged.png" ] []
-            --     ]
-            rect
-                [ x1 (String.fromInt x_1)
-                , x2 (String.fromInt x_2)
-                , y1 (String.fromInt y_1)
-                , y2 (String.fromInt y_2)
-                , fill "red"
-                ]
-                [ img [ HtmlAttr.class "square_img", src "images/flagged.png" ] [] ]
+            svgFlag
+                |> List.append svgClosedSquareBackground
+                |> svg (svgClosedSquareBaseAttributes aSquare)
 
 
 intANDstringTOstring : Int -> String -> String
@@ -157,6 +148,24 @@ insertBackground =
         , fill "none"
         ]
         []
+    ]
+
+
+svgClosedSquareBaseAttributes : Square -> List (Html.Attribute Msg)
+svgClosedSquareBaseAttributes aSquare =
+    [ SvgAttr.y (String.fromInt (aSquare.i * C.squareWidth))
+    , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
+    , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
+    , fill lightGrey
+    , onRightClick (ToggleFlag aSquare)
+    ]
+
+
+svgClosedSquareBackground : List (Svg Msg)
+svgClosedSquareBackground =
+    [ polygon [ points "0 0 0 32 32 32 0 0", fill lightGrey ] []
+    , polygon [ points "0 32 32 0 32 32 0 32", fill darkGrey ] []
+    , rect [ x "4", y "4", SvgAttr.width "24", SvgAttr.height "24", fill grey ] []
     ]
 
 
@@ -215,11 +224,14 @@ insertSquareDrawing aSquare =
                 2 ->
                     svgTwo
 
+                3 ->
+                    svgThree
+
                 _ ->
-                    svgRedBomb
+                    svgOtherNumber
 
         BOOOMB ->
-            []
+            svgRedBomb
 
 
 svgRedBomb : List (Svg Msg)
@@ -233,6 +245,17 @@ svgRedBomb =
     , line [ x1 "7", y1 "25", x2 "25", y2 "7", stroke "black", strokeWidth "1" ] []
     , line [ x1 "7", y1 "7", x2 "25", y2 "25", stroke "black", strokeWidth "2" ] []
     , rect [ x "11", y "11", SvgAttr.width "3", SvgAttr.height "3", SvgAttr.stroke "none", SvgAttr.fill "white" ] []
+    ]
+
+
+svgFlag : List (Svg Msg)
+svgFlag =
+    [ line [ x1 "10", y1 "12", x2 "15", y2 "12", stroke "red", strokeWidth "4" ] []
+    , line [ x1 "15", y1 "8", x2 "15", y2 "15", stroke "red", strokeWidth "5" ] []
+    , line [ x1 "19", y1 "6", x2 "19", y2 "17", stroke "red", strokeWidth "5" ] []
+    , line [ x1 "20", y1 "17", x2 "20", y2 "24", stroke "black", strokeWidth "2" ] []
+    , line [ x1 "11", y1 "22", x2 "24", y2 "22", stroke "black", strokeWidth "2" ] []
+    , line [ x1 "9", y1 "24", x2 "25", y2 "24", stroke "black", strokeWidth "4" ] []
     ]
 
 
@@ -255,6 +278,23 @@ svgTwo =
     , line [ x1 "23", y1 "16", x2 "23", y2 "8", stroke "green", strokeWidth "4" ] []
     , line [ x1 "9", y1 "8", x2 "23", y2 "8", stroke "green", strokeWidth "4" ] []
     , line [ x1 "6", y1 "11", x2 "11", y2 "11", stroke "green", strokeWidth "4" ] []
+    ]
+
+
+svgThree : List (Svg Msg)
+svgThree =
+    [ line [ x1 "7", y1 "7", x2 "24", y2 "7", stroke "red", strokeWidth "4" ] []
+    , line [ x1 "23", y1 "6", x2 "23", y2 "15", stroke "red", strokeWidth "5" ] []
+    , line [ x1 "13", y1 "16", x2 "25", y2 "16", stroke "red", strokeWidth "4" ] []
+    , line [ x1 "23", y1 "17", x2 "23", y2 "26", stroke "red", strokeWidth "5" ] []
+    , line [ x1 "7", y1 "25", x2 "24", y2 "25", stroke "red", strokeWidth "4" ] []
+    ]
+
+
+svgOtherNumber : List (Svg Msg)
+svgOtherNumber =
+    [ line [ x1 "23", y1 "17", x2 "23", y2 "26", stroke "red", strokeWidth "5" ] []
+    , line [ x1 "7", y1 "25", x2 "24", y2 "25", stroke "red", strokeWidth "4" ] []
     ]
 
 

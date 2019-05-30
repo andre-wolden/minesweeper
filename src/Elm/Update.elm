@@ -4,7 +4,7 @@ import Array exposing (..)
 import Elm.Constants as C
 import Elm.GenerateMatrixWithBombs exposing (..)
 import Elm.MatrixAddBombNeighbouringNumber exposing (updateMatrixWithBombNeighbouringNumbers)
-import Elm.MatrixUtils exposing (..)
+import Elm.MatrixUtils as MatrixUtils exposing (..)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
 import Elm.RandomNumber exposing (..)
@@ -40,9 +40,8 @@ update message model =
                         sorted_bomb_list =
                             Just (List.sort bombList)
 
-                        _ =
-                            Debug.log "Random list: " sorted_bomb_list
-
+                        -- _ =
+                        --     Debug.log "Random list: " sorted_bomb_list
                         matrix_with_bombs : Matrix
                         matrix_with_bombs =
                             generateMatrixWithBombs bombList C.n_columns C.n_rows
@@ -67,9 +66,6 @@ update message model =
             case model.gameState of
                 NotStarted ->
                     let
-                        _ =
-                            Debug.log "Hei" 13
-
                         updated_model =
                             { model | startingSquare = Just squareToOpen, n_opened_so_far = 1 }
                     in
@@ -105,8 +101,18 @@ update message model =
                             )
 
                         BOOOMB ->
+                            let
+                                _ =
+                                    Debug.log "BOOOOOOOOOOOMB" 13
+
+                                updated_matrix_with_all_bomb_squares_opened =
+                                    MatrixUtils.openAllBombSquares updated_matrix
+
+                                _ =
+                                    Debug.log (Debug.toString updated_matrix_with_all_bomb_squares_opened)
+                            in
                             ( { model
-                                | matrix = updated_matrix
+                                | matrix = updated_matrix_with_all_bomb_squares_opened
                                 , gameState = Dead
                                 , n_opened_so_far = n_opened_so_far_updated
                               }
