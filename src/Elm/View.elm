@@ -77,19 +77,6 @@ turnColumnIntoHtml arrayColumn =
 
 turnSquareIntoSomeHtmlStuff : Square -> Html Msg
 turnSquareIntoSomeHtmlStuff aSquare =
-    let
-        x_1 =
-            aSquare.i * C.squareWidth
-
-        x_2 =
-            x_1 + C.squareWidth
-
-        y_1 =
-            aSquare.j * C.squareWidth
-
-        y_2 =
-            y_1 + C.squareWidth
-    in
     case aSquare.squareViewState of
         SquareViewStateClosed ->
             svgClosedSquare aSquare
@@ -153,7 +140,7 @@ insertBackground =
 
 svgClosedSquareBaseAttributes : Square -> List (Html.Attribute Msg)
 svgClosedSquareBaseAttributes aSquare =
-    [ SvgAttr.y (String.fromInt (aSquare.i * C.squareWidth))
+    [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
     , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
     , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
     , fill lightGrey
@@ -172,7 +159,7 @@ svgClosedSquareBackground =
 svgClosedSquare : Square -> Svg Msg
 svgClosedSquare aSquare =
     svg
-        [ SvgAttr.y (String.fromInt (aSquare.i * C.squareWidth))
+        [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
         , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
         , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
         , fill lightGrey
@@ -190,7 +177,7 @@ svgOpenEmptySquare aSquare =
     openSquareBackground aSquare
         :: insertSquareDrawing aSquare
         |> svg
-            [ SvgAttr.y (String.fromInt (aSquare.i * C.squareWidth))
+            [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
             , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
             , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
             ]
