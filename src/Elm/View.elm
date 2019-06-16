@@ -5,6 +5,7 @@ import Elm.Constants as C
 import Elm.Flag exposing (..)
 import Elm.Messages exposing (..)
 import Elm.Model exposing (Model)
+import Elm.Svgs as S
 import Elm.Types exposing (..)
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
@@ -17,6 +18,7 @@ view : Model -> Html Msg
 view model =
     div [ HtmlAttr.class "container" ]
         [ viewSpinnerOrPage model
+        , div [ HtmlAttr.class "debug_wrapper" ] [ div [ HtmlAttr.class "debug" ] [ Html.text (viewGameState model.gameState) ] ]
         ]
 
 
@@ -27,10 +29,9 @@ viewSpinnerOrPage model =
             div [ HtmlAttr.class "blockrow" ] [ Html.text "Loading ..." ]
 
         False ->
-            div []
-                [ div [] [ Html.text " " ]
-                , div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
-                , div [ HtmlAttr.class "debug_wrapper" ] [ div [ HtmlAttr.class "debug" ] [ Html.text (viewGameState model.gameState) ] ]
+            div [ HtmlAttr.class "wrapper" ]
+                [ div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
+                , div [ HtmlAttr.class "svg_background" ] [ S.background model ]
                 ]
 
 
@@ -52,19 +53,11 @@ viewGameState gameState =
 
 insertMatrix : Matrix -> Html Msg
 insertMatrix matrix =
-    let
-        vbWidth =
-            C.n_columns * C.squareWidth
-
-        vbHeight =
-            C.n_rows * C.squareWidth
-    in
     Array.toList matrix
         |> List.map turnColumnIntoHtml
         |> List.concat
-        |> List.append insertBackground
         |> svg
-            [ viewBox "0 0 1080 480"
+            [ viewBox "0 0 1080 680"
             , SvgAttr.class "svg_matrix"
             ]
 
@@ -90,85 +83,38 @@ turnSquareIntoSomeHtmlStuff aSquare =
                 |> svg (svgClosedSquareBaseAttributes aSquare)
 
 
-intANDstringTOstring : Int -> String -> String
-intANDstringTOstring int string =
-    String.fromInt int ++ ", " ++ string
-
-
-lightGrey =
-    "rgb(250,250,250)"
-
-
-grey =
-    "rgb(169,169,169)"
-
-
-darkGrey =
-    "rgb(105,105,105)"
-
-
-totalWidth =
-    "1024"
-
-
-totalHeight =
-    "480"
-
-
-insertBackground : List (Svg Msg)
-insertBackground =
-    [ polygon
-        [ points "1 1 1024 1 1019 6 6 6"
-        , fill lightGrey
-        ]
-        []
-    , polygon
-        [ points "1024 1 1024 480 1019 475 1019 6"
-        , fill darkGrey
-        ]
-        []
-    , polygon
-        [ points "10 10 1014 10 1014 470 10 470 10 10"
-        , strokeWidth "10"
-        , stroke grey
-        , strokeLinecap "square"
-        , fill "none"
-        ]
-        []
-    ]
-
-
 svgClosedSquareBaseAttributes : Square -> List (Html.Attribute Msg)
 svgClosedSquareBaseAttributes aSquare =
-    [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
+    [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
     , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
     , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
-    , fill lightGrey
+    , fill C.lightGrey
     , onRightClick (ToggleFlag aSquare)
     ]
 
 
 svgClosedSquareBackground : List (Svg Msg)
 svgClosedSquareBackground =
-    [ polygon [ points "0 0 0 32 32 32 0 0", fill lightGrey ] []
-    , polygon [ points "0 32 32 0 32 32 0 32", fill darkGrey ] []
-    , rect [ x "4", y "4", SvgAttr.width "24", SvgAttr.height "24", fill grey ] []
+    [ polygon [ points "0 0 0 32 32 0 0 0", fill C.lightGrey ] []
+    , polygon [ points "0 32 32 0 32 32 0 32", fill C.darkGrey ] []
+    , rect [ x "4", y "4", SvgAttr.width "24", SvgAttr.height "24", fill C.grey ] []
     ]
 
 
 svgClosedSquare : Square -> Svg Msg
 svgClosedSquare aSquare =
     svg
-        [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
+        [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
         , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
-        , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
-        , fill lightGrey
+
+        -- , viewBox ("0 0 " ++ String.fromInt C.squareWidth ++ " " ++ String.fromInt C.squareWidth)
+        , fill C.lightGrey
         , onClick (OpenSquare aSquare)
         , onRightClick (ToggleFlag aSquare)
         ]
-        [ polygon [ points "0 0 0 32 32 32 0 0", fill lightGrey ] []
-        , polygon [ points "0 32 32 0 32 32 0 32", fill darkGrey ] []
-        , rect [ x "4", y "4", SvgAttr.width "24", SvgAttr.height "24", fill grey ] []
+        [ polygon [ points "0 0 0 32 32 0 0 0", fill C.lightGrey ] []
+        , polygon [ points "0 32 32 0 32 32 0 32", fill C.darkGrey ] []
+        , rect [ x "4", y "4", SvgAttr.width "24", SvgAttr.height "24", fill C.grey ] []
         ]
 
 
@@ -177,7 +123,7 @@ svgOpenEmptySquare aSquare =
     openSquareBackground aSquare
         :: insertSquareDrawing aSquare
         |> svg
-            [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 44))
+            [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
             , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
             , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
             ]
@@ -190,9 +136,9 @@ openSquareBackground aSquare =
         , y "0"
         , SvgAttr.width "32"
         , SvgAttr.height "32"
-        , fill grey
+        , fill C.grey
         , strokeWidth "1"
-        , stroke darkGrey
+        , stroke C.darkGrey
         ]
         []
 

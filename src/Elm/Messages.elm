@@ -9,6 +9,7 @@ type Msg
     | GotBombList (List Int)
     | OpenSquare Square
     | ToggleFlag Square
+    | NewGame
 
 
 

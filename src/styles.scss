@@ -26,14 +26,13 @@ button {
 
 .container {
   margin-top: 3rem;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
 }
 
 .blockrow {
   display: block;
 }
+
+
 
 .board {
   display: inline-block;
@@ -108,24 +107,20 @@ $dark-grey: #000000;
 $border_width: 32;
 $inner_top_height: 64;
 
-.svgExperimentation {
+.wrapper {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  border: 1px solid black;
-  width: 1026px;
-  height: 482px;
-  margin-bottom: 3rem;
-  text-align: left;
-}
-
-.svg_experiment {
-  width: 1024px;
-  height: 480px;
+  top: 1%;
+  left: 2%;
+  width: 96%;
+  height: 600px;
 }
 
 .svg_matrix {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 1080px;
-  height: 480px;
-  border: 1px dotted red;
+}
+
+.svg_background {
 }

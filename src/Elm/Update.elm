@@ -3,6 +3,7 @@ module Elm.Update exposing (update)
 import Array exposing (..)
 import Elm.Constants as C
 import Elm.GenerateMatrixWithBombs exposing (..)
+import Elm.InitModel exposing (initModel)
 import Elm.MatrixAddBombNeighbouringNumber exposing (updateMatrixWithBombNeighbouringNumbers)
 import Elm.MatrixUtils as MatrixUtils exposing (..)
 import Elm.Messages exposing (Msg(..))
@@ -134,6 +135,13 @@ update message model =
                     toggleFlagOnSquare model.matrix aSquare
             in
             ( { model | matrix = matrix_updated }, Cmd.none )
+
+        NewGame ->
+            let
+                _ =
+                    Debug.log "Start new game..." 13
+            in
+            ( initModel, Cmd.none )
 
 
 seeIfVictorious : Matrix -> Bool
