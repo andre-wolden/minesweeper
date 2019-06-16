@@ -87,7 +87,6 @@ svgClosedSquareBaseAttributes : Square -> List (Html.Attribute Msg)
 svgClosedSquareBaseAttributes aSquare =
     [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
     , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
-    , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
     , fill C.lightGrey
     , onRightClick (ToggleFlag aSquare)
     ]
@@ -106,8 +105,6 @@ svgClosedSquare aSquare =
     svg
         [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
         , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
-
-        -- , viewBox ("0 0 " ++ String.fromInt C.squareWidth ++ " " ++ String.fromInt C.squareWidth)
         , fill C.lightGrey
         , onClick (OpenSquare aSquare)
         , onRightClick (ToggleFlag aSquare)
@@ -125,7 +122,6 @@ svgOpenEmptySquare aSquare =
         |> svg
             [ SvgAttr.y (String.fromInt ((aSquare.i * C.squareWidth) + 64))
             , SvgAttr.x (String.fromInt (aSquare.j * C.squareWidth))
-            , viewBox ("0 0" ++ String.fromInt C.squareWidth ++ String.fromInt C.squareWidth)
             ]
 
 
@@ -152,13 +148,19 @@ insertSquareDrawing aSquare =
         ANumber int ->
             case aSquare.n_nabo_miner of
                 1 ->
-                    svgOne
+                    svgFive
 
                 2 ->
                     svgTwo
 
                 3 ->
                     svgThree
+
+                4 ->
+                    svgFour
+
+                5 ->
+                    svgFive
 
                 _ ->
                     svgOtherNumber
@@ -221,6 +223,25 @@ svgThree =
     , line [ x1 "13", y1 "16", x2 "25", y2 "16", stroke "red", strokeWidth "4" ] []
     , line [ x1 "23", y1 "17", x2 "23", y2 "26", stroke "red", strokeWidth "5" ] []
     , line [ x1 "7", y1 "25", x2 "24", y2 "25", stroke "red", strokeWidth "4" ] []
+    ]
+
+
+svgFour : List (Svg Msg)
+svgFour =
+    [ line [ x1 "9", y1 "6", x2 "13", y2 "6", stroke "purple", strokeWidth "4" ] []
+    , line [ x1 "8", y1 "10", x2 "12", y2 "10", stroke "purple", strokeWidth "4" ] []
+    , line [ x1 "6", y1 "14", x2 "23", y2 "14", stroke "purple", strokeWidth "4" ] []
+    , line [ x1 "19", y1 "4", x2 "19", y2 "26", stroke "purple", strokeWidth "5" ] []
+    ]
+
+
+svgFive : List (Svg Msg)
+svgFive =
+    [ line [ x1 "6", y1 "7", x2 "22", y2 "7", stroke "brown", strokeWidth "4" ] []
+    , line [ x1 "9", y1 "9", x2 "9", y2 "16", stroke "brown", strokeWidth "5" ] []
+    , line [ x1 "6", y1 "17", x2 "20", y2 "17", stroke "brown", strokeWidth "4" ] []
+    , line [ x1 "21", y1 "16", x2 "21", y2 "25", stroke "brown", strokeWidth "5" ] []
+    , line [ x1 "21", y1 "25", x2 "6", y2 "25", stroke "brown", strokeWidth "4" ] []
     ]
 
 

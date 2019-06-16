@@ -74,7 +74,6 @@ background model =
             , width "35"
             , height "35"
             , fill C.grey
-            , onClick NewGame
             ]
             []
         , smileyFaceNormal "522" "27" "42"
