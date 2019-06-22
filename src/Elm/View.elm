@@ -32,6 +32,7 @@ viewSpinnerOrPage model =
             div [ HtmlAttr.class "wrapper" ]
                 [ div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
                 , div [ HtmlAttr.class "svg_background" ] [ S.background model ]
+                , div [ HtmlAttr.class "smiley_button" ] [ button [] [ Html.text "O" ] ]
                 ]
 
 
@@ -148,7 +149,7 @@ insertSquareDrawing aSquare =
         ANumber int ->
             case aSquare.n_nabo_miner of
                 1 ->
-                    svgFive
+                    svgOne
 
                 2 ->
                     svgTwo
