@@ -1,7 +1,11 @@
 {
-    "author": "woldena",
+    "author": "André Wolden",
     "name": "minesweep",
     "version": "1.0.0",
+    "engines": {
+        "node": "10.17.0",
+        "npm": "6.9.0"
+    },
     "description": "asdfasdf",
     "main": "index.js",
     "scripts": {
@@ -47,9 +51,5 @@
     },
     "prettier": {
         "tabWidth": 4
-    },
-    "engines": {
-        "node" : "10.16.0",
-        "npm" : "6.9.0"
     }
 }
