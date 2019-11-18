@@ -11,6 +11,7 @@ module Elm.MatrixUtils exposing
     , getAllNine
     , getListOfEmptyButStillClosedNeighbours
     , getListOfEmptyNeighbours
+    , openAllBombSquares
     , openAllNeighbours
     , openNeighboursRecursively
     , openSquare
@@ -291,6 +292,30 @@ openSquare matrix squareToOpen =
             updateArrayWithUpdatedSquare maybeColumnToUpdate squareToOpen_updated
     in
     Array.set (squareToOpen_updated.i - 1) arrayToBeUpdated_updated matrix
+
+
+openAllBombSquares : Matrix -> Matrix
+openAllBombSquares matrix =
+    Array.map openAllBombSquaresInList matrix
+
+
+openAllBombSquaresInList : Array Square -> Array Square
+openAllBombSquaresInList squareList =
+    Array.map openIfBomb squareList
+
+
+openIfBomb : Square -> Square
+openIfBomb aSquare =
+    let
+        squareOpened =
+            { aSquare | squareViewState = SquareViewStateOpen }
+    in
+    case aSquare.square_content of
+        BOOOMB ->
+            squareOpened
+
+        _ ->
+            aSquare
 
 
 updateArrayWithUpdatedSquare : Maybe (Array Square) -> Square -> Array Square
