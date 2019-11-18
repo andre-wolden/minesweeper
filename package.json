@@ -12,7 +12,7 @@
         "test": "elm-test",
         "start": "npm run dev",
         "dev": "webpack-dev-server --hot --colors --port 3000",
-        "build": "webpack",
+        "build": "webpack -p",
         "prod": "webpack -p"
     },
     "repository": {
@@ -47,6 +47,7 @@
         "webpack-merge": "^4.2.1"
     },
     "dependencies": {
+        "express": "^4.17.1",
         "purecss": "^1.0.0"
     },
     "prettier": {
