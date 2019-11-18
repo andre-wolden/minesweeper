@@ -5,7 +5,7 @@ import Elm.Constants as C
 import Elm.Flag exposing (..)
 import Elm.Messages exposing (..)
 import Elm.Model exposing (Model)
-import Elm.Svgs as S
+import Elm.Svgs as S exposing (smileyFaceNormal)
 import Elm.Types exposing (..)
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
@@ -30,9 +30,10 @@ viewSpinnerOrPage model =
 
         False ->
             div [ HtmlAttr.class "wrapper" ]
-                [ div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
-                , div [ HtmlAttr.class "svg_background" ] [ S.background model ]
-                , div [ HtmlAttr.class "smiley_button" ] [ button [] [ Html.text "O" ] ]
+                [ div [ HtmlAttr.class "svg_background" ] [ S.background model ]
+                , div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
+                , button [ onClick NewGame ][ Html.text "NewGame Msg"]
+                , smileyFaceNormal "522" "27" "42"
                 ]
 
 

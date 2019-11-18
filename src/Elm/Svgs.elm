@@ -3,11 +3,10 @@ module Elm.Svgs exposing (background, redTestSvg, smileyFaceNormal)
 import Elm.Constants as C
 import Elm.Messages exposing (..)
 import Elm.Model exposing (..)
-import Html
+import Html.Events exposing (onClick)
 import String exposing (fromFloat, fromInt)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Events exposing (onClick)
 
 
 background : Model -> Svg Msg
@@ -18,7 +17,8 @@ background model =
         , y "0"
         , width "1020"
         ]
-        [ polygon
+        [ smileyFaceNormal "522" "27" "42"
+        , polygon
             [ points "0 0 1020 0 1016 4 4 4 4 631 0 627 0 0"
             , stroke "none"
             , strokeLinecap "square"
@@ -76,7 +76,7 @@ background model =
             , fill C.grey
             ]
             []
-        , smileyFaceNormal "522" "27" "42"
+
         ]
 
 
@@ -110,22 +110,29 @@ redTestSvg =
 
 smileyFaceNormal : String -> String -> String -> Svg Msg
 smileyFaceNormal x_ y_ width_ =
-    svg
-        [ width width_
-        , height width_
-        , viewBox "0 0 50 50"
-        , x x_
-        , y y_
-        ]
-        [ circle [ cx "25", cy "25", r "16", fill "yellow", strokeWidth "2", stroke "black" ] []
-        , line [ x1 "18", y1 "21", x2 "22", y2 "21", strokeWidth "6", stroke "black" ] []
-        , line [ x1 "28", y1 "21", x2 "32", y2 "21", strokeWidth "6", stroke "black" ] []
-        , line [ x1 "16", y1 "31", x2 "19", y2 "31", strokeWidth "3", stroke "black" ] []
-        , line [ x1 "18", y1 "33", x2 "21", y2 "33", strokeWidth "3", stroke "black" ] []
-        , line [ x1 "20", y1 "35", x2 "30", y2 "35", strokeWidth "3", stroke "black" ] []
-        , line [ x1 "29", y1 "33", x2 "32", y2 "33", strokeWidth "3", stroke "black" ] []
-        , line [ x1 "31", y1 "31", x2 "34", y2 "31", strokeWidth "3", stroke "black" ] []
-        ]
+        svg
+            [ width width_
+            , height width_
+            , viewBox "0 0 50 50"
+            , x x_
+            , y y_
+            , onClick NewGame
+            ]
+            [ circle [ cx "25", cy "25", r "16", fill "yellow", strokeWidth "2", stroke "black" ] []
+            , line [ x1 "18", y1 "21", x2 "22", y2 "21", strokeWidth "6", stroke "black" ] []
+            , line [ x1 "28", y1 "21", x2 "32", y2 "21", strokeWidth "6", stroke "black" ] []
+            , line [ x1 "16", y1 "31", x2 "19", y2 "31", strokeWidth "3", stroke "black" ] []
+            , line [ x1 "18", y1 "33", x2 "21", y2 "33", strokeWidth "3", stroke "black" ] []
+            , line [ x1 "20", y1 "35", x2 "30", y2 "35", strokeWidth "3", stroke "black" ] []
+            , line [ x1 "29", y1 "33", x2 "32", y2 "33", strokeWidth "3", stroke "black" ] []
+            , line [ x1 "31", y1 "31", x2 "34", y2 "31", strokeWidth "3", stroke "black" ] []
+            ]
+
+
+smileyFaceBox : Svg Msg
+smileyFaceBox =
+    svg [
+    ][]
 
 
 
