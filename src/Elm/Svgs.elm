@@ -3,6 +3,7 @@ module Elm.Svgs exposing (background, redTestSvg, smileyFaceNormal)
 import Elm.Constants as C
 import Elm.Messages exposing (..)
 import Elm.Model exposing (..)
+import Html exposing (button)
 import Html.Events exposing (onClick)
 import String exposing (fromFloat, fromInt)
 import Svg exposing (..)
@@ -17,8 +18,7 @@ background model =
         , y "0"
         , width "1020"
         ]
-        [ smileyFaceNormal "522" "27" "42"
-        , polygon
+        [ polygon
             [ points "0 0 1020 0 1016 4 4 4 4 631 0 627 0 0"
             , stroke "none"
             , strokeLinecap "square"
@@ -76,7 +76,7 @@ background model =
             , fill C.grey
             ]
             []
-
+        , smileyFaceNormal "522" "27" "42"
         ]
 
 

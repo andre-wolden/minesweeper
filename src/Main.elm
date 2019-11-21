@@ -1,14 +1,9 @@
 port module Main exposing (init, main, toJs)
 
-import Array exposing (..)
 import Browser
-import Browser.Navigation as Nav
-import Elm.Constants as C
 import Elm.InitModel exposing (initModel)
-import Elm.MatrixUtils exposing (generateDefaultMatrix)
 import Elm.Messages exposing (Msg(..))
 import Elm.Model exposing (Model)
-import Elm.Types exposing (GameState(..))
 import Elm.Update exposing (update)
 import Elm.View exposing (view)
 
@@ -23,7 +18,7 @@ main =
         , update = update
         , view =
             \m ->
-                { title = "Elm 0.19 starter"
+                { title = "Wolden's Minesweeper Copy"
                 , body = [ view m ]
                 }
         , subscriptions = \_ -> Sub.none

@@ -32,8 +32,7 @@ viewSpinnerOrPage model =
             div [ HtmlAttr.class "wrapper" ]
                 [ div [ HtmlAttr.class "svg_background" ] [ S.background model ]
                 , div [ HtmlAttr.class "matrix" ] [ insertMatrix model.matrix ]
-                , button [ onClick NewGame ][ Html.text "NewGame Msg"]
-                , smileyFaceNormal "522" "27" "42"
+                , button [ onClick NewGame ][ Html.text "New Game"]
                 ]
 
 
