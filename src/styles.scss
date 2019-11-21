@@ -18,7 +18,6 @@ button {
 }
 
 .logo {
-    background: url('images/logo.png');
     width: 60px;
     height: 60px;
     background-size: cover;
@@ -74,7 +73,6 @@ $square_widht: 32;
 
 .square_open {
   background-color: white;
-  background-image: url("images/open_nothing.png");
   background-size: 32px;
 }
 
