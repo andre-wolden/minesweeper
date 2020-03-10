@@ -103,14 +103,8 @@ update message model =
 
                         BOOOMB ->
                             let
-                                _ =
-                                    Debug.log "BOOOOOOOOOOOMB" 13
-
                                 updated_matrix_with_all_bomb_squares_opened =
                                     MatrixUtils.openAllBombSquares updated_matrix
-
-                                _ =
-                                    Debug.log (Debug.toString updated_matrix_with_all_bomb_squares_opened)
                             in
                             ( { model
                                 | matrix = updated_matrix_with_all_bomb_squares_opened
@@ -128,8 +122,8 @@ update message model =
 
         ToggleFlag aSquare ->
             let
-                _ =
-                    Debug.log "Toggle Flag ass" 13
+                --_ =
+                --    Debug.log "Toggle Flag ass" 13
 
                 matrix_updated =
                     toggleFlagOnSquare model.matrix aSquare
@@ -137,10 +131,10 @@ update message model =
             ( { model | matrix = matrix_updated }, Cmd.none )
 
         NewGame ->
-            let
-                _ =
-                    Debug.log "Start new game..." 13
-            in
+            --let
+            --    --_ =
+            --    --    Debug.log "Start new game..." 13
+            --in
             ( initModel, Cmd.none )
 
 
