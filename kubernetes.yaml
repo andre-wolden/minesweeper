@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: minesweeper
-          image: woldena/minesweeper:0.1
+          image: woldena/minesweeper:0.2
           ports:
             - containerPort: 80
 ---
