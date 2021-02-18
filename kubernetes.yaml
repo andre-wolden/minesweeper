@@ -1,0 +1,60 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: minesweeper
+  labels:
+    app: minesweeper
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minesweeper
+  template:
+    metadata:
+      labels:
+        app: minesweeper
+    spec:
+      containers:
+        - name: minesweeper
+          image: woldena/minesweeper:0.1
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minesweeper
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: minesweeper
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: minesweeper
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+spec:
+  rules:
+    - host: www.funkoa.com
+      http:
+        paths:
+          - path: /minesweeper
+            backend:
+              serviceName: minesweeper
+              servicePort: http
+    - host: funkoa.com
+      http:
+        paths:
+          - path: /minesweeper
+            backend:
+              serviceName: minesweeper
+              servicePort: http
+  tls:
+    - secretName: funkoa-tls-cert
