@@ -1,23 +1,23 @@
 {
     "author": "André Wolden",
-    "name": "minesweep",
+    "name": "minesweeper",
     "version": "1.0.0",
     "engines": {
-        "node": "10.17.0",
-        "npm": "6.9.0"
+        "node": "14.15.4",
+        "npm": "6.14.10"
     },
-    "description": "asdfasdf",
+    "description": "Minesweeper, written in Elm",
     "main": "index.js",
     "scripts": {
-        "test": "elm-test",
         "start": "npm run dev",
         "dev": "webpack-dev-server --hot --colors --port 3000",
-        "build": "webpack -p",
-        "prod": "webpack -p"
+        "build": "webpack",
+        "prod": "webpack -p",
+        "analyse": "elm-analyse -s -p 3001 -o"
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "git+https://github.com/woldena/minesweeper.git"
     },
     "license": "MIT",
     "devDependencies": {
