@@ -52,7 +52,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: woldena/minesweeper:0.4
+          tags: woldena/minesweeper:0.5
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
